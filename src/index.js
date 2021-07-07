@@ -10,18 +10,17 @@ import debounce from 'lodash.debounce';
 const refs = getRefs();
 
 refs.searchForm.addEventListener('input', debounce(onInputSearch, 500));
+import { fetchCountries } from './fetchCountries';
 
 function onInputSearch(event) {
   refs.countriesContainer.innerHTML = '';
+  refs.countryContainer.innerHTML = '';
   const inputValue = event.target.value;
   if (!inputValue) {
     return;
   }
 
-  fetch(`https://restcountries.eu/rest/v2/name/${inputValue}`)
-    .then(response =>
-      response.ok ? response.json() : Promise.reject(`Error status ` + response.status),
-    )
+  fetchCountries(inputValue)
     .then(data => {
       if (data.length >= 2 && data.length < 10) {
         displayCountryList(data);
